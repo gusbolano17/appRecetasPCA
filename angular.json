@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["lodash"],
             "outputPath": "www",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -136,7 +137,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": "526f7573-36f3-4606-a180-0f74d6df8532"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
