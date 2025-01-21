@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+figure {
+  margin: 0 auto 20px;
+  width: auto;
+  height: auto;
+}
+
+form {
+  width: 100%;
+}
+
+ion-item, ion-button {
+  width: 100%;
+  margin-bottom: 20px 0;
+}
+ion-button {
+  --margin-top: 20px;
+  --background: #ff5722;
+  --background-hover: #e64a19;
+  --background-activated: #e64a19;
+  --background-focused: #e64a19;
+  --color: #fff;
+  --font-weight: bold;
+  --border-radius: 5px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}

@@ -14,9 +14,9 @@ export class IntroPage {
     private storage: Storage
   ) { }
 
-  finish(){
-    this.storage.set('viLaIntro', true);
-    this.router.navigateByUrl('/home');
+  async finish(){
+    await this.storage.set('viLaIntro', true);
+    await this.router.navigateByUrl('/login');
   }
 
 }
