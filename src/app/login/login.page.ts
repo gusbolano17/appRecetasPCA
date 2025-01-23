@@ -44,7 +44,6 @@ export class LoginPage{
 
 
   loginUser(credentials: any){
-    console.log(credentials)
     this.authService.login(credentials).then(res => {
       this.errorMessage = '';
       this.storage.set('isUserLoggedIn', true);

@@ -1,19 +1,53 @@
 import { Injectable } from '@angular/core';
+import {SupabaseService} from "./supabase.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(private supabaseS : SupabaseService) { }
 
-  login(credentials:any) {
-    return new Promise((resolve, reject) => {
-      if(credentials.email == 'admin@mail.com' && credentials.password == '123456') {
-        resolve("Login correcto")
-      }else{
-        reject("Credenciales incorrectas")
-      }
-    })
+  async login(credentials:any) {
+    const { data, error } = await this.supabaseS.client.auth.signInWithPassword(credentials);
+    if (error) {
+      return { error: error.message };
+    }
+    return data;
+  }
+
+  async register(credentials: any) {
+    const { data : user, error } = await this.supabaseS.client.auth.signUp({
+      email : credentials.email,
+      password: credentials.password,
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+
+    const { error: profileError } = await this.supabaseS.client
+      .from('profiles')
+      .insert([
+        {
+          id_usuario: user.user?.id,
+          nombre: credentials.nombre,
+          apellido: credentials.apellido,
+        },
+      ]);
+
+    if (profileError) {
+      return { error: profileError.message };
+    }
+
+    return { data: user };
+  }
+
+  async logout() {
+    const { error } = await this.supabaseS.client.auth.signOut();
+    if (error) {
+      return { error: error.message };
+    }
+    return { message: 'Cierre de sesión exitoso' };
   }
 }
