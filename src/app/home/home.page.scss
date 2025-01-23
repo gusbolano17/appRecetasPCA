@@ -1,11 +1,10 @@
-swiper-container {
-  height: 100%;
-  width: 100%;
+ion-content {
+  display: flex;
+  flex-direction: column;
 }
 
-swiper-slide {
+.user-label {
+  margin-left: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
