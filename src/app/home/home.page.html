@@ -1,49 +1,52 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-row class="ion-align-items-center ion-justify-content-center">
-      <ion-col size="auto" class="logo-col">
-        <ion-img src="assets/images/logo_main.png" alt="Logo app" class="logo-brand"></ion-img>
-      </ion-col>
-      <ion-col size="auto" class="text-col">
-        <h1 class="app-title">COOKING FOR WORLD</h1>
-      </ion-col>
-    </ion-row>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-grid>
+      <ion-row class="align-center">
+        <ion-col size="auto">
+          <ion-img src="assets/images/logo_main.png" alt="Logo app" class="logo-brand"></ion-img>
+        </ion-col>
+        <ion-col size="auto" class="text-col">
+          <h1 class="app-title">COOKING FOR WORLD</h1>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
+
+
 <ion-content>
   <ion-grid>
     <ion-row>
-      <!-- Cada receta será un ion-col -->
+
       <ion-col
         *ngFor="let r of recetas"
         size="12" size-md="6" size-lg="4"
       >
         <ion-card>
-          <!-- Información del usuario -->
+
           <ion-item lines="none">
             <ion-avatar>
               <ion-img
                 alt="Avatar de usuario"
-                [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
+                [src]="r.id_usuario?.img_perfil"
               />
             </ion-avatar>
-            <ion-label class="user-label">{{ usuario?.nombre }}</ion-label>
+            <ion-label class="user-label">{{ r.id_usuario?.nombre }} {{ r.id_usuario?.apellido }}</ion-label>
           </ion-item>
 
-          <!-- Imagen de la receta -->
           <ion-item>
-            <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref" />
+            <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref " />
           </ion-item>
 
-          <!-- Título y descripción -->
           <ion-card-header>
             <ion-card-title>{{ r.nombre_receta }}</ion-card-title>
             <ion-card-subtitle>{{ r.descripcion }}</ion-card-subtitle>
           </ion-card-header>
 
-          <!-- Contenido del Card -->
           <ion-card-content>
-            <!-- Acordeón de ingredientes -->
             <ion-accordion-group *ngIf="r.ingredientes?.length">
               <ion-accordion value="ingredientes">
                 <ion-item slot="header">
@@ -58,14 +61,6 @@
                 </ion-list>
               </ion-accordion>
             </ion-accordion-group>
-
-            <!-- Botón para cargar los ingredientes si no están disponibles -->
-            <ion-button
-              *ngIf="!r.ingredientes?.length"
-              (click)="listarIngredientesIdReceta(r.id, r)"
-            >
-              Cargar Ingredientes
-            </ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>

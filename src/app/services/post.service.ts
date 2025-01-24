@@ -9,7 +9,14 @@ export class PostService {
   constructor(private supabaseS : SupabaseService) { }
 
   async listarRecetas(){
-    return this.supabaseS.client.from('recetas').select('*');
+    return this.supabaseS.client.from('recetas')
+      .select(`
+        nombre_receta,
+        descripcion,
+        imagen_ref,
+        id_usuario(*),
+        ingredientes(*)
+      `);
   }
 
   async listarIngredientesIdReceta(id: number){
