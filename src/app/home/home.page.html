@@ -1,40 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-row class="ion-align-items-center ion-justify-content-center">
+      <ion-col size="auto" class="logo-col">
+        <ion-img src="assets/images/logo_main.png" alt="Logo app" class="logo-brand"></ion-img>
+      </ion-col>
+      <ion-col size="auto" class="text-col">
+        <h1 class="app-title">COOKING FOR WORLD</h1>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <ion-card *ngFor="let r of recetas">
-
-      <ion-item lines="none">
-        <ion-avatar>
-          <ion-img alt="Avatar de usuario" [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'" />
-        </ion-avatar>
-        <ion-label class="user-label">{{ usuario?.nombre }}</ion-label>
-      </ion-item>
-
-    <ion-item>
-      <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref" />
-    </ion-item>
-    <ion-card-header>
-      <ion-card-title>{{ r.nombre_receta }}</ion-card-title>
-      <ion-card-subtitle>{{ r.descripcion }}</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      <!-- Acordeón de ingredientes -->
-      <ion-accordion-group *ngIf="r.ingredientes?.length">
-        <ion-accordion value="ingredientes">
-          <ion-item slot="header">
-            <ion-label>Ingredientes</ion-label>
+  <ion-grid>
+    <ion-row>
+      <!-- Cada receta será un ion-col -->
+      <ion-col
+        *ngFor="let r of recetas"
+        size="12" size-md="6" size-lg="4"
+      >
+        <ion-card>
+          <!-- Información del usuario -->
+          <ion-item lines="none">
+            <ion-avatar>
+              <ion-img
+                alt="Avatar de usuario"
+                [src]="'https://ionicframework.com/docs/img/demos/avatar.svg'"
+              />
+            </ion-avatar>
+            <ion-label class="user-label">{{ usuario?.nombre }}</ion-label>
           </ion-item>
-          <ion-list slot="content">
-            <ion-item *ngFor="let ing of r.ingredientes">
-              <ion-label>{{ ing.nombre }} - {{ ing.cantidades }}</ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-accordion>
-      </ion-accordion-group>
 
-      <!-- Botón para cargar los ingredientes si no están disponibles -->
-      <ion-button *ngIf="!r.ingredientes?.length" (click)="listarIngredientesIdReceta(r.id, r)">
-        Cargar Ingredientes
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+          <!-- Imagen de la receta -->
+          <ion-item>
+            <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref" />
+          </ion-item>
+
+          <!-- Título y descripción -->
+          <ion-card-header>
+            <ion-card-title>{{ r.nombre_receta }}</ion-card-title>
+            <ion-card-subtitle>{{ r.descripcion }}</ion-card-subtitle>
+          </ion-card-header>
+
+          <!-- Contenido del Card -->
+          <ion-card-content>
+            <!-- Acordeón de ingredientes -->
+            <ion-accordion-group *ngIf="r.ingredientes?.length">
+              <ion-accordion value="ingredientes">
+                <ion-item slot="header">
+                  <ion-label>Ingredientes</ion-label>
+                </ion-item>
+                <ion-list slot="content">
+                  <ion-item *ngFor="let ing of r.ingredientes">
+                    <ion-label>
+                      {{ ing.nombre }} - {{ ing.cantidades }}
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-accordion>
+            </ion-accordion-group>
+
+            <!-- Botón para cargar los ingredientes si no están disponibles -->
+            <ion-button
+              *ngIf="!r.ingredientes?.length"
+              (click)="listarIngredientesIdReceta(r.id, r)"
+            >
+              Cargar Ingredientes
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
