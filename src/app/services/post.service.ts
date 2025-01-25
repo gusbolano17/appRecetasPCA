@@ -28,19 +28,27 @@ export class PostService {
     })
   }
 
-  // async listarIngredientesIdReceta(id: number){
-  //   return new Promise((resolve, reject) => {
-  //     this.supabaseS.client.from('ingredientes').select('*').eq('id_receta', id).then((resp) => {
-  //       if (resp.data){
-  //         resolve(resp.data);
-  //       }else{
-  //         reject("No se encontraron registros");
-  //       }
-  //     })
-  //   });
-  // }
+  async agregarReceta(receta: any) {
+    return new Promise((resolve, reject) => {
+      this.supabaseS.client.from('recetas').insert([receta]).select().single().then((resp) => {
+        if (resp.data){
+          resolve(resp.data)
+        }else{
+          reject(resp.error);
+        }
+      })
+    })
+  }
 
-  // async obtenerUsuario(id : number){
-  //   return this.supabaseS.client.from('profiles').select('*').eq('id_usuario', id).single();
-  // }
+  async agregarIngredients(ingredientes: any) {
+    return new Promise((resolve, reject) => {
+      this.supabaseS.client.from('ingredientes').insert(ingredientes).then((resp) => {
+        if (resp.data){
+          resolve(resp)
+        }else{
+          reject(resp.error);
+        }
+      })
+    })
+  }
 }

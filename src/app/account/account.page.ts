@@ -30,7 +30,6 @@ export class AccountPage implements OnInit {
     this.profileService.obtenerUsuarioId(id).then(usuario => {
       this.storage.set('usuario', usuario);
       this.usuario = usuario;
-      console.log(this.usuario);
     }).catch(error => {
       console.error(error);
     });
