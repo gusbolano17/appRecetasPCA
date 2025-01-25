@@ -47,6 +47,7 @@ export class LoginPage{
     this.authService.login(credentials).then(res => {
       this.errorMessage = '';
       this.storage.set('isUserLoggedIn', true);
+      this.storage.set('userId', res)
       this.navCtrl.navigateForward('/menu/home');
     }).catch(err => {
       console.log(err);

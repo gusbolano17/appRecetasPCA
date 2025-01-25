@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["lodash", "localforage"],
+            "allowedCommonJsDependencies": ["lodash", "localforage", "ws"],
             "outputPath": "www",
             "index": "src/index.html",
             "main": "src/main.ts",

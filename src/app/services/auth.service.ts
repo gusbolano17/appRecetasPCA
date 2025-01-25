@@ -8,12 +8,14 @@ export class AuthService {
 
   constructor(private supabaseS : SupabaseService) { }
 
-  async login(credentials:any) {
-    const { data, error } = await this.supabaseS.client.auth.signInWithPassword(credentials);
-    if (error) {
-      return { error: error.message };
-    }
-    return data;
+  login(credentials:any) {
+    return new Promise(async (resolve, reject) => {
+      const { data, error } = await this.supabaseS.client.auth.signInWithPassword(credentials);
+      if (error) {
+        return reject(error);
+      }
+      return resolve(data.user);
+    })
   }
 
   async register(credentials: any) {

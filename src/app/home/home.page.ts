@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.postS.listarRecetas().then(res => {
-      this.recetas = res.data;
+      this.recetas = res;
     })
   }
 

@@ -19,7 +19,7 @@ export class MenuPage{
 
   logOut(){
     this.authService.logout().then(res => {
-      this.storage.remove('isUserLoggedIn');
+      this.storage.clear()
       this.navCtrl.navigateForward('/login');
       this.closeMenu();
     })
