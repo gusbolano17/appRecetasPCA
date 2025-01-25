@@ -13,7 +13,9 @@
 
 <ion-content>
   <ion-title>{{usuario?.nombre}} {{usuario?.apellido}}</ion-title>
-  <ion-img [src]="usuario?.img_perfil" alt="perfil"></ion-img>
+    <ion-avatar (click)="tomarFoto()">
+      <ion-img [src]="usuario?.img_perfil" alt="perfil"></ion-img>
+    </ion-avatar>
   <p>Username : {{usuario?.username}}</p>
   <p>Followers: 0</p>
   <p>Following: 0</p>

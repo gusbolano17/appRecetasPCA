@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {SupabaseService} from "./supabase.service";
-import {Usuario} from "../interface/Usuario";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +8,7 @@ export class ProfileService {
 
   constructor(private supabaseS : SupabaseService) { }
 
-  obtenerUsuarioId(id : any): Promise<Usuario> {
+  obtenerUsuarioId(id : any) {
     return new Promise((resolve, reject) => {
       this.supabaseS.client.from('profiles')
         .select('*')
@@ -21,5 +20,19 @@ export class ProfileService {
         }
       })
     });
+  }
+
+  async actualizarUsuario(credenciales : any) {
+    return new Promise((resolve, reject) => {
+      this.supabaseS.client.from('profiles').update(credenciales).eq('id', credenciales.id).then(result => {
+        if (result) {
+          resolve(result);
+        }else{
+          reject('Surgio un error');
+        }
+      })
+    }).catch(err => {
+      console.error(err)
+    })
   }
 }
