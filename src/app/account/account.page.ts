@@ -4,6 +4,7 @@ import {Storage} from "@ionic/storage-angular";
 import {NavController} from "@ionic/angular";
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import {PostService} from "../services/post.service";
 defineCustomElements(window)
 
 @Component({
@@ -23,7 +24,13 @@ export class AccountPage implements OnInit {
     img_perfil: '',
   };
 
-  constructor(private profileService: ProfileService, private storage : Storage, private navCtrl : NavController) { }
+  recetas : any;
+
+  constructor(private profileService: ProfileService,
+              private postS : PostService,
+              private storage : Storage,
+              private navCtrl : NavController
+  ) { }
 
   async ngOnInit() {
     let {id} = await this.storage.get('userId');
@@ -32,6 +39,10 @@ export class AccountPage implements OnInit {
       this.usuario = usuario;
     }).catch(error => {
       console.error(error);
+    });
+
+    await this.postS.listarRecetas().then((res:any) => {
+      this.recetas = res.filter((rec:any) => rec.id_usuario.id_usuario == id);
     });
   }
 

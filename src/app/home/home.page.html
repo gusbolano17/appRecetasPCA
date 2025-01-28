@@ -23,8 +23,7 @@
       <ion-row>
 
         <ion-col *ngFor="let r of recetas" size="12" size-md="6" size-lg="4">
-          <ion-card>
-
+          <ion-card class="ion-padding">
             <ion-item lines="none">
               <ion-avatar>
                 <ion-img
@@ -36,7 +35,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref " />
+              <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref " class="image-post" />
             </ion-item>
 
             <ion-card-header>

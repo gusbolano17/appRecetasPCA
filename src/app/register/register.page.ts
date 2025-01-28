@@ -53,4 +53,7 @@ export class RegisterPage{
     });
   }
 
+  regresar() {
+    this.navCtrl.navigateBack('/login');
+  }
 }
