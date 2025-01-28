@@ -43,13 +43,16 @@ export class PostmodalPage {
   }
 
   async agregarPost(data: any) {
-    const user = await this.storage.get('user');
+    let usuario = await this.storage.get('user');
+    if(!usuario) {
+      usuario = await this.storage.get('userId').then((p) => p.user);
+    }
 
     const post_param = {
       post: {
         description: data.description,
         image: data.image,
-        user_id: user.id
+        user_id: usuario.id
       }
     }
 

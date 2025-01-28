@@ -17,7 +17,30 @@
       <ion-col size-sm="12" size-md="6">
         <ion-card>
           <ion-card-header>
-            <ion-title>{{usuario?.name}} {{usuario?.last_name}}</ion-title>
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col *ngIf="!editing; else nameEdit">
+                  <ion-title>{{usuario?.name}} {{usuario?.last_name}}</ion-title>
+                </ion-col>
+
+                <ng-template #nameEdit>
+                  <form [formGroup]="editForm">
+                    <ion-col>
+                      <ion-input label="Nombre" label-placement="floating" formControlName="name"></ion-input>
+                    </ion-col>
+                    <ion-col>
+                      <ion-input label="Apellido" label-placement="floating" formControlName="last_name"></ion-input>
+                    </ion-col>
+                  </form>
+                </ng-template>
+
+                <ion-col size="auto">
+                  <ion-button (click)="toggleEditar()">
+                    <ion-icon name="pencil"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </ion-card-header>
           <figure (click)="tomarFoto()">
             <ion-img class="img_profile" [src]="usuario?.image" alt="perfil"></ion-img>
