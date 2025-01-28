@@ -28,7 +28,8 @@ const routes: Routes = [
   {
     path: 'postmodal',
     loadChildren: () => import('./postmodal/postmodal.module').then( m => m.PostmodalPageModule)
-  },
+  }
+
 ];
 
 @NgModule({

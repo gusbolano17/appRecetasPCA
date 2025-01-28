@@ -11,6 +11,11 @@ export class ProfileService {
 
   constructor(private http: HttpClient) { }
 
+  listarUsuarios(page: number, perPage: number, query: string = ''){
+    const url = `${this.urlServer}/list_users?page=${page}&per_page=${perPage}&query=${query}`;
+    return this.http.get(url).toPromise();
+  }
+
   getUser(id: any){
     return new Promise((accept, reject) => {
       this.http.get(`${this.urlServer}/current_user/${id}`, this.httpHeaders).subscribe(
