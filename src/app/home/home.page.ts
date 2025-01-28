@@ -35,19 +35,20 @@ export class HomePage implements OnInit {
 
   cargarPosts(event?:any){
     this.postS.listarPosts(this.page, this.limit).then(
-      (data:any) => {
-        if(data.length > 0){
-          this.posts = [...this.posts, data];
-          console.log(this.posts);
+      (data: any)=>{
+        if (data.length > 0){
+          this.posts = [...this.posts, ...data];
           this.page++;
         }else{
           this.hasMore = false;
         }
+
         if (event){
           event.target.complete();
         }
-      }, error => {
-        console.error(error);
+      },
+      (error)=>{
+        console.log(error);
         if (event){
           event.target.complete();
         }
