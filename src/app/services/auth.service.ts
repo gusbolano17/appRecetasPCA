@@ -1,55 +1,79 @@
 import { Injectable } from '@angular/core';
-import {SupabaseService} from "./supabase.service";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private supabaseS : SupabaseService) { }
+  urlServer = 'http://51.79.26.171';
+  httpHeaders = { headers: new HttpHeaders({"Content-Type": "application/json"})};
 
-  login(credentials:any) {
-    return new Promise(async (resolve, reject) => {
-      const { data, error } = await this.supabaseS.client.auth.signInWithPassword(credentials);
-      if (error) {
-        return reject(error);
+  constructor(private http: HttpClient) { }
+
+  login(credentials: any){
+    return new Promise((accept, reject) => {
+      let params = {
+        "user": {
+          "email": credentials.email,
+          "password": credentials.password
+        }
       }
-      return resolve(data.user);
-    })
-  }
-
-  async register(credentials: any) {
-    const { data : user, error } = await this.supabaseS.client.auth.signUp({
-      email : credentials.email,
-      password: credentials.password,
-    });
-
-    if (error) {
-      return { error: error.message };
-    }
-
-    const { error: profileError } = await this.supabaseS.client
-      .from('profiles')
-      .insert([
-        {
-          id_usuario: user.user?.id,
-          nombre: credentials.nombre,
-          apellido: credentials.apellido,
+      this.http.post(`${this.urlServer}/login`, params, this.httpHeaders).subscribe(
+        (data: any)=>{
+          console.log(data);
+          if (data.status == 'OK'){
+            accept(data);
+          }else{
+            reject(data.errors);
+          }
         },
-      ]);
-
-    if (profileError) {
-      return { error: profileError.message };
-    }
-
-    return { data: user };
+        (error) => {
+          console.log(error);
+          if (error.status == 422){
+            reject('Usuario o contraseña incorrectos');
+          } else if (error.status == 500){
+            reject('Error Por favor intenta mas tarde');
+          }else{
+            reject('Error al intentar iniciar sesión');
+          }
+        }
+      )
+    });
   }
 
-  async logout() {
-    const { error } = await this.supabaseS.client.auth.signOut();
-    if (error) {
-      return { error: error.message };
-    }
-    return { message: 'Cierre de sesión exitoso' };
+  register(data: any){
+    return new Promise((accept, reject) => {
+      let params = {
+        "user": {
+          "email": data.email,
+          "password": data.password,
+          "password_confirmation": data.password_confirmation,
+          "name": data.name,
+          "last_name": data.last_name,
+          "username": data.username
+        }
+      }
+      this.http.post(`${this.urlServer}/signup`, params, this.httpHeaders).subscribe(
+        (data: any)=>{
+          console.log(data);
+          if (data.status == 'OK'){
+            accept(data);
+          }else{
+            reject(data.errors);
+          }
+        },
+        (error) => {
+          console.log(error);
+          if (error.status == 422){
+            reject(error.error.errors);
+          } else if (error.status == 500){
+            reject('Error Por favor intenta mas tarde');
+          }else{
+            reject('Error al intentar registrarse');
+          }
+        }
+      )
+    });
   }
 }

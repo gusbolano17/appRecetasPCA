@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Camera, CameraResultType, CameraSource} from "@capacitor/camera";
 import {defineCustomElements} from "@ionic/pwa-elements/loader";
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {PostService} from "../services/post.service";
 import {Storage} from "@ionic/storage-angular";
-import {ProfileService} from "../services/profile.service";
 import {ModalController} from "@ionic/angular";
 defineCustomElements(window)
 
@@ -14,79 +13,52 @@ defineCustomElements(window)
   styleUrls: ['./postmodal.page.scss'],
   standalone: false
 })
-export class PostmodalPage implements OnInit {
+export class PostmodalPage {
 
-  postImg : any;
-  postForm : FormGroup;
+  addPostForm: FormGroup;
+  post_image: any;
 
-  constructor(private fb : FormBuilder, private postService: PostService, private profileService : ProfileService ,private storage : Storage, private modalController : ModalController) {
-    this.postForm = this.fb.group({
-      imagen_ref: new FormControl(""),
-      nombre: new FormControl(""),
-      descripcion: new FormControl(""),
-      ingredientes: this.fb.array([])
-    })
-  }
-
-  async ngOnInit() {
-    const {id} = await this.storage.get('userId');
-    this.profileService.obtenerUsuarioId(id).then(usuario => {
-      this.storage.set('usuario', usuario);
-    })
-  }
-
-  get ingredientes() : FormArray{
-    return this.postForm.get('ingredientes') as FormArray;
-  }
-
-  async uploadImg() {
-    const foto = await Camera.getPhoto({
-      resultType : CameraResultType.DataUrl,
-      quality : 100,
-      source : CameraSource.Photos
-    })
-
-    this.postImg = foto.dataUrl;
-    this.postForm.patchValue({ imagen_ref: this.postImg });
-  }
-
-  agregarIngrediente(){
-    const nuevoIngrediente = this.fb.group({
-      nombre: new FormControl(""),
-      cantidades: new FormControl(""),
+  constructor(
+    private fb: FormBuilder,
+    private postService: PostService,
+    private storage: Storage,
+    private modalController: ModalController
+  ) {
+    this.addPostForm = this.fb.group({
+      description: new FormControl('', Validators.required),
+      image: new FormControl('', Validators.required)
     });
-    this.ingredientes.push(nuevoIngrediente);
   }
 
-  quitarIngrediente(i : number){
-    this.ingredientes.removeAt(i);
+  async subirFoto() {
+    const foto = await Camera.getPhoto({
+      quality: 100,
+      source: CameraSource.Photos,
+      resultType: CameraResultType.DataUrl
+    })
+    this.post_image = foto.dataUrl;
+    this.addPostForm.patchValue({
+      image: this.post_image
+    })
   }
 
-  async agregarReceta(formData: any){
+  async agregarPost(data: any) {
+    const user = await this.storage.get('user');
 
-    const {id} = await this.storage.get('usuario');
-
-    const receta = {
-      nombre_receta: formData.nombre,
-      descripcion: formData.descripcion,
-      created_at: new Date(),
-      imagen_ref: formData.imagen_ref,
-      id_usuario: id,
+    const post_param = {
+      post: {
+        description: data.description,
+        image: data.image,
+        user_id: user.id
+      }
     }
 
-    const ingredientes = formData.ingredientes;
+    this.postService.createPost(post_param).then(data => {
+      console.log('Post creado', data);
+      this.modalController.dismiss();
+    }).catch(error => {
+      console.error('error', error)
+    })
 
-    this.postService.agregarReceta(receta).then((resp:any) => {
-      if(resp){
-        ingredientes.forEach((ing : any) => {
-          this.postService.agregarIngredients({...ing, id_receta : resp.id, created_at : new Date()}).then(result => {
-            this.modalController.dismiss();
-          })
-        })
-      }
-    }).catch(err => {
-      console.error("error",err);
-    });
   }
-
 }

@@ -11,17 +11,15 @@ import {Storage} from "@ionic/storage-angular";
 })
 export class MenuPage{
 
-  constructor(private menuC : MenuController, private authService : AuthService, private storage : Storage, private navCtrl : NavController) { }
+  constructor(private menuC : MenuController, private storage : Storage, private navCtrl : NavController) { }
 
   async closeMenu(){
     await this.menuC.close();
   }
 
   logOut(){
-    this.authService.logout().then(res => {
-      this.storage.clear()
-      this.navCtrl.navigateForward('/login');
-      this.closeMenu();
-    })
+    this.storage.clear()
+    this.navCtrl.navigateForward('/login');
+    this.closeMenu();
   }
 }

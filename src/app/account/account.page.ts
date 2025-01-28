@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ProfileService} from "../services/profile.service";
 import {Storage} from "@ionic/storage-angular";
-import {NavController} from "@ionic/angular";
+import {MenuController, NavController} from "@ionic/angular";
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import {PostService} from "../services/post.service";
@@ -16,34 +16,30 @@ defineCustomElements(window)
 export class AccountPage implements OnInit {
 
   public usuario : any = {
-    id: 0,
-    nombre: '',
-    apellido: '',
-    username: '',
-    id_usuario: '',
-    img_perfil: '',
+    name: '',
+    last_name:'',
+    email: '',
+    image: '',
+    followed_users: [],
+    following_users: []
   };
-
-  recetas : any;
 
   constructor(private profileService: ProfileService,
               private postS : PostService,
+              private menuCtrl: MenuController,
               private storage : Storage,
               private navCtrl : NavController
   ) { }
 
   async ngOnInit() {
-    let {id} = await this.storage.get('userId');
-    this.profileService.obtenerUsuarioId(id).then(usuario => {
-      this.storage.set('usuario', usuario);
-      this.usuario = usuario;
+    await this.menuCtrl.close();
+    let usuario = await this.storage.get('userId');
+    this.profileService.getUser(usuario.user.id).then(data => {
+      this.storage.set('user', data);
+      this.usuario = data;
     }).catch(error => {
       console.error(error);
-    });
-
-    await this.postS.listarRecetas().then((res:any) => {
-      this.recetas = res.filter((rec:any) => rec.id_usuario.id_usuario == id);
-    });
+    })
   }
 
   regresar(){
@@ -62,8 +58,8 @@ export class AccountPage implements OnInit {
   }
 
   async actualizarUsuario() {
-    this.profileService.actualizarUsuario(this.usuario).then(usuario => {
-      console.log(usuario);
+    this.profileService.updateUser(this.usuario).then(data => {
+      console.log(data);
     }).catch(error => {
       console.error(error);
     })

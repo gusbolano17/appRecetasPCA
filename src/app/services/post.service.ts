@@ -1,54 +1,49 @@
 import { Injectable } from '@angular/core';
-import {SupabaseService} from "./supabase.service";
-import {resolve} from "@angular/compiler-cli";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  constructor(private supabaseS : SupabaseService) { }
+  urlServer = 'http://51.79.26.171';
+  httpHeaders = { headers: new HttpHeaders({"Content-Type": "application/json"})};
 
-  async listarRecetas(){
-    return new Promise((resolve, reject) => {
-      this.supabaseS.client.from('recetas')
-        .select(`
-        nombre_receta,
-        descripcion,
-        imagen_ref,
-        id_usuario(*),
-        ingredientes(*)
-      `).then((resp) => {
-        if (resp.data){
-          resolve(resp.data);
-        }else{
-          reject("No se encontraron registros");
+  constructor(private http: HttpClient) { }
+
+  listarPosts(){
+    return new Promise((accept, reject) => {
+      this.http.get(`${this.urlServer}/posts`, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          console.log(error, 'error');
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al obtener los Posts');
+          }
         }
-      })
-    })
+      )
+    });
   }
 
-  async agregarReceta(receta: any) {
-    return new Promise((resolve, reject) => {
-      this.supabaseS.client.from('recetas').insert([receta]).select().single().then((resp) => {
-        if (resp.data){
-          resolve(resp.data)
-        }else{
-          reject(resp.error);
+  createPost(post_data: any){
+    return new Promise((accept, reject) => {
+      this.http.post(`${this.urlServer}/posts`, post_data, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          console.log(error, 'error');
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al crear el Post');
+          }
         }
-      })
-    })
-  }
-
-  async agregarIngredients(ingredientes: any) {
-    return new Promise((resolve, reject) => {
-      this.supabaseS.client.from('ingredientes').insert(ingredientes).then((resp) => {
-        if (resp.data){
-          resolve(resp)
-        }else{
-          reject(resp.error);
-        }
-      })
-    })
+      )
+    });
   }
 }

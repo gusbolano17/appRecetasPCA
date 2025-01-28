@@ -1,38 +1,52 @@
 import { Injectable } from '@angular/core';
-import {SupabaseService} from "./supabase.service";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
 
-  constructor(private supabaseS : SupabaseService) { }
+  urlServer = 'http://51.79.26.171';
+  httpHeaders = { headers: new HttpHeaders({"Content-Type": "application/json"})};
 
-  obtenerUsuarioId(id : any) {
-    return new Promise((resolve, reject) => {
-      this.supabaseS.client.from('profiles')
-        .select('*')
-        .eq('id_usuario', id).single().then(result => {
-        if (result) {
-          resolve(result.data);
-        }else{
-          reject('No se encontro el usuario');
+  constructor(private http: HttpClient) { }
+
+  getUser(id: any){
+    return new Promise((accept, reject) => {
+      this.http.get(`${this.urlServer}/current_user/${id}`, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          console.log(error, 'error');
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al obtener el usuario');
+          }
         }
-      })
+      )
     });
   }
 
-  async actualizarUsuario(credenciales : any) {
-    return new Promise((resolve, reject) => {
-      this.supabaseS.client.from('profiles').update(credenciales).eq('id', credenciales.id).then(result => {
-        if (result) {
-          resolve(result);
-        }else{
-          reject('Surgio un error');
+  updateUser(user: any){
+    const user_params = {
+      user: user
+    }
+    return new Promise((accept, reject) => {
+      this.http.post(`${this.urlServer}/update/${user.id}`, user_params, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          console.log(error, 'error');
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al actualizar el usuario');
+          }
         }
-      })
-    }).catch(err => {
-      console.error(err)
-    })
+      )
+    });
   }
 }

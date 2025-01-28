@@ -20,6 +20,9 @@ export class RegisterPage{
     apellido: [{
       type: 'required',  message: 'El apellido es obligatorio',
     }],
+    username: [
+      { type: 'required', message: 'El nombre de usuario es obligatorio' }
+    ],
     email: [
       { type: 'required', message: 'El correo es obligatorio' },
       { type: 'email', message: 'El correo no es valido' }
@@ -28,18 +31,28 @@ export class RegisterPage{
       { type: 'required', message: 'La contraseña es obligatoria' },
       { type: 'minlength', message: 'La contraseña debe ser minimo de 6 caracteres' }
     ],
-    confirmPassword: [{
-      type: 'required', message: 'La contraseñas ingresadas no coinciden'
-    }]
+    confirmPassword: [
+      { type: 'required', message: 'La contraseña es obligatoria' },
+      { type: 'passwordMismatch', message: 'Las contraseñas no coinciden' }
+    ]
   }
 
   constructor(private fb : FormBuilder, private authService : AuthService, private navCtrl: NavController) {
     this.formRegister = this.fb.group({
-      nombre : new FormControl('', Validators.required),
-      apellido : new FormControl('', Validators.required),
-      email : new FormControl('', Validators.compose([Validators.required, Validators.email])),
-      password: new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])),
-      confirmPassword: new FormControl('', Validators.required)
+      name: new FormControl('', Validators.compose([Validators.required])),
+      last_name: new FormControl('', Validators.compose([Validators.required])),
+      username: new FormControl('', Validators.compose([Validators.required])),
+      email: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.email
+      ])),
+      password: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.minLength(6)
+      ])),
+      confirmPassword: new FormControl('', Validators.compose([
+        Validators.required
+      ]))
     }, {
       validators : validadorCoincidenciaPass
     })

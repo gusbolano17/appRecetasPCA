@@ -22,43 +22,44 @@
     <ion-grid>
       <ion-row>
 
-        <ion-col *ngFor="let r of recetas" size="12" size-md="6" size-lg="4">
+        <ion-col *ngFor="let post of posts" size="12" size-md="6" size-lg="4">
           <ion-card class="ion-padding">
             <ion-item lines="none">
               <ion-avatar>
-                <ion-img
-                  alt="Avatar de usuario"
-                  [src]="r.id_usuario?.img_perfil"
-                />
+                <ion-img alt="Avatar de usuario" [src]="post.user.image"/>
               </ion-avatar>
-              <ion-label class="user-label">{{ r.id_usuario?.nombre }} {{ r.id_usuario?.apellido }}</ion-label>
+              <ion-label class="user-label">{{ post.user.name }} {{ post.user.last_name }}</ion-label>
             </ion-item>
 
             <ion-item>
-              <ion-img [alt]="r.nombre_receta" [src]="r.imagen_ref " class="image-post" />
+              <ion-img [src]="post.image" alt="imagen post" class="image-post" />
             </ion-item>
 
-            <ion-card-header>
-              <ion-card-title>{{ r.nombre_receta }}</ion-card-title>
-              <ion-card-subtitle>{{ r.descripcion }}</ion-card-subtitle>
-            </ion-card-header>
-
             <ion-card-content>
-              <ion-accordion-group *ngIf="r.ingredientes?.length">
-                <ion-accordion value="ingredientes">
-                  <ion-item slot="header">
-                    <ion-label>Ingredientes</ion-label>
-                  </ion-item>
-                  <ion-list slot="content">
-                    <ion-item *ngFor="let ing of r.ingredientes">
-                      <ion-label>
-                        {{ ing.nombre }} - {{ ing.cantidades }}
-                      </ion-label>
-                    </ion-item>
-                  </ion-list>
-                </ion-accordion>
-              </ion-accordion-group>
+              {{ post.description }}
             </ion-card-content>
+
+<!--            <ion-card-header>-->
+<!--              <ion-card-title>{{ r.nombre_receta }}</ion-card-title>-->
+<!--              <ion-card-subtitle>{{ r.descripcion }}</ion-card-subtitle>-->
+<!--            </ion-card-header>-->
+
+<!--            <ion-card-content>-->
+<!--              <ion-accordion-group *ngIf="r.ingredientes?.length">-->
+<!--                <ion-accordion value="ingredientes">-->
+<!--                  <ion-item slot="header">-->
+<!--                    <ion-label>Ingredientes</ion-label>-->
+<!--                  </ion-item>-->
+<!--                  <ion-list slot="content">-->
+<!--                    <ion-item *ngFor="let ing of r.ingredientes">-->
+<!--                      <ion-label>-->
+<!--                        {{ ing.nombre }} - {{ ing.cantidades }}-->
+<!--                      </ion-label>-->
+<!--                    </ion-item>-->
+<!--                  </ion-list>-->
+<!--                </ion-accordion>-->
+<!--              </ion-accordion-group>-->
+<!--            </ion-card-content>-->
           </ion-card>
         </ion-col>
       </ion-row>

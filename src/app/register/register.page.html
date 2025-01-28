@@ -32,13 +32,13 @@
                 label="Nombre"
                 labelPlacement="floating"
                 placeholder="pepito"
-                formControlName="nombre"
+                formControlName="name"
               ></ion-input>
             </ion-item>
             <ng-container *ngFor="let error of formErrors.nombre">
               <ion-label
                 color="danger"
-                *ngIf="formRegister.get('nombre')?.hasError(error.type) && formRegister.get('nombre')?.dirty"
+                *ngIf="formRegister.get('name')?.hasError(error.type) && formRegister.get('name')?.dirty"
               >
                 {{ error.message }}
               </ion-label>
@@ -52,13 +52,13 @@
                 label="Apellido"
                 labelPlacement="floating"
                 placeholder="perez"
-                formControlName="apellido"
+                formControlName="last_name"
               ></ion-input>
             </ion-item>
             <ng-container *ngFor="let error of formErrors.apellido">
               <ion-label
                 color="danger"
-                *ngIf="formRegister.get('apellido')?.hasError(error.type) && formRegister.get('apellido')?.dirty"
+                *ngIf="formRegister.get('last_name')?.hasError(error.type) && formRegister.get('last_name')?.dirty"
               >
                 {{ error.message }}
               </ion-label>
@@ -79,6 +79,26 @@
               <ion-label
                 color="danger"
                 *ngIf="formRegister.get('email')?.hasError(error.type) && formRegister.get('email')?.dirty"
+              >
+                {{ error.message }}
+              </ion-label>
+            </ng-container>
+          </ion-item-group>
+
+          <!-- Campo Username -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                label="Username"
+                labelPlacement="floating"
+                placeholder="user00"
+                formControlName="username"
+              ></ion-input>
+            </ion-item>
+            <ng-container *ngFor="let error of formErrors.username">
+              <ion-label
+                color="danger"
+                *ngIf="formRegister.get('username')?.hasError(error.type) && formRegister.get('username')?.dirty"
               >
                 {{ error.message }}
               </ion-label>

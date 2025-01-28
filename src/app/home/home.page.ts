@@ -13,13 +13,13 @@ import {Storage} from "@ionic/storage-angular";
 })
 export class HomePage implements OnInit {
 
-  public recetas : any;
+  public posts : any;
 
   constructor(private postS : PostService, private modalController : ModalController) { }
 
   async ngOnInit() {
-    this.postS.listarRecetas().then(res => {
-      this.recetas = res;
+    this.postS.listarPosts().then(res => {
+      this.posts = res;
     })
   }
 
