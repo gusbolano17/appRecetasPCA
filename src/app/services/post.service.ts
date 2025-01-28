@@ -11,9 +11,9 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  listarPosts(){
+  listarPosts(page: number, perPage: number){
     return new Promise((accept, reject) => {
-      this.http.get(`${this.urlServer}/posts`, this.httpHeaders).subscribe(
+      this.http.get(`${this.urlServer}/posts?page=${page}&per_page=${perPage}`, this.httpHeaders).subscribe(
         (data: any)=>{
           accept(data);
         },

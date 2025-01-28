@@ -13,14 +13,15 @@ import {Storage} from "@ionic/storage-angular";
 })
 export class HomePage implements OnInit {
 
-  public posts : any;
+  posts : any[] = [];
+  page : number = 1;
+  limit : number = 10;
+  hasMore : boolean = true;
 
   constructor(private postS : PostService, private modalController : ModalController) { }
 
   async ngOnInit() {
-    this.postS.listarPosts().then(res => {
-      this.posts = res;
-    })
+    this.cargarPosts();
   }
 
 
@@ -30,6 +31,28 @@ export class HomePage implements OnInit {
       componentProps: {}
     })
     return modal.present();
+  }
+
+  cargarPosts(event?:any){
+    this.postS.listarPosts(this.page, this.limit).then(
+      (data:any) => {
+        if(data.length > 0){
+          this.posts = [...this.posts, data];
+          console.log(this.posts);
+          this.page++;
+        }else{
+          this.hasMore = false;
+        }
+        if (event){
+          event.target.complete();
+        }
+      }, error => {
+        console.error(error);
+        if (event){
+          event.target.complete();
+        }
+      }
+    )
   }
 
 

@@ -53,7 +53,7 @@ export class AccountPage implements OnInit {
       resultType: CameraResultType.DataUrl
     })
 
-    this.usuario.img_perfil = imagen?.dataUrl;
+    this.usuario.image = imagen?.dataUrl;
     await this.actualizarUsuario();
   }
 
