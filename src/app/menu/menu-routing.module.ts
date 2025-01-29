@@ -19,7 +19,7 @@ const routes: Routes = [
       {
         path: 'buscar-usuarios',
         loadChildren: () => import('../buscar-usuarios/buscar-usuarios.module').then( m => m.BuscarUsuariosPageModule)
-      },
+      }
     ]
   }
 ];

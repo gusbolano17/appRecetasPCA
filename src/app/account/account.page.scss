@@ -5,6 +5,17 @@
   border-radius: 8px;
 }
 
+.post-card {
+  height: 100px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.post-card ion-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 ion-button{
   --background: #ff5722;
   --background-hover: #e64a19;

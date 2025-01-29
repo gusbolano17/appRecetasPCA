@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {ProfileService} from "../services/profile.service";
 import {Storage} from "@ionic/storage-angular";
-import {MenuController, NavController} from "@ionic/angular";
+import {MenuController, ModalController, NavController} from "@ionic/angular";
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import {PostService} from "../services/post.service";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {EditProfilePage} from "../edit-profile/edit-profile.page";
 defineCustomElements(window)
 
 @Component({
@@ -17,7 +17,6 @@ defineCustomElements(window)
 export class AccountPage implements OnInit {
 
   editing : boolean = false;
-  editForm : FormGroup;
 
   public usuario : any = {
     name: '',
@@ -27,58 +26,32 @@ export class AccountPage implements OnInit {
     followed_users: [],
     following_users: []
   };
+  posts: any[] = [];
 
   constructor(private profileService: ProfileService,
               private menuCtrl: MenuController,
               private storage : Storage,
               private navCtrl : NavController,
-              private formBuilder : FormBuilder,
+              private postService: PostService,
+              private modalController : ModalController
   ) {
-    this.editForm = this.formBuilder.group({
-      name: new FormControl("", [Validators.required]),
-      last_name: new FormControl("", [Validators.required]),
-    })
   }
 
   async ngOnInit() {
     await this.menuCtrl.close();
     await this.obtenerUsuario();
+    this.listarPostsUsuario();
   }
 
   regresar(){
     this.navCtrl.navigateBack('menu/home');
   }
 
-  async tomarFoto(){
-    const imagen = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.DataUrl
+  async listarPostsUsuario(){
+    let usuario = await this.storage.get('userId');
+    this.postService.listarTodosPosts().then((resp:any) => {
+      this.posts = resp.filter((p:any) => p.user_id == usuario.user.id);
     })
-
-    this.usuario.image = imagen?.dataUrl;
-    await this.actualizarUsuario();
-  }
-
-  async actualizarUsuario() {
-    this.profileService.updateUser(this.usuario).then(data => {
-      console.log(data);
-    }).catch(error => {
-      console.error(error);
-    })
-  }
-
-  async toggleEditar() {
-    if(this.editing){
-      this.usuario.name = this.editForm.get('name')?.value;
-      this.usuario.last_name = this.editForm.get('last_name')?.value;
-      if(this.editForm.valid){
-        await this.actualizarUsuario()
-      }else{
-        await this.obtenerUsuario()
-      }
-    }
-    this.editing = !this.editing;
   }
 
   async obtenerUsuario(){
@@ -89,6 +62,15 @@ export class AccountPage implements OnInit {
     }).catch(error => {
       console.error(error);
     })
+  }
+
+  async editarUsuarioModal(){
+    let usuario = await this.storage.get('userId');
+    const modal = await this.modalController.create({
+      component: EditProfilePage,
+      componentProps: {usuario}
+    })
+    return modal.present();
   }
 
 }

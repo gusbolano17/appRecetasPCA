@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar perfil de usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%;">
+      <!-- Columna central para el formulario -->
+      <ion-col size="12" size-md="8" size-lg="6">
+        <form [formGroup]="formEdit" (ngSubmit)="editarUsuario(formEdit.value)">
+          <!--Campo imagen-->
+          <ion-item-group class="ion-margin" (click)="tomarFoto()">
+            <figure>
+              <ion-img [src]="usuarioE.image" alt="Profile Image" ></ion-img>
+            </figure>
+          </ion-item-group>
+          <!-- Campo Nombre -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                label="Nombre"
+                labelPlacement="floating"
+                formControlName="name"
+              ></ion-input>
+            </ion-item>
+            <ng-container *ngFor="let error of formErrors.nombre">
+              <ion-label
+                color="danger"
+                *ngIf="formEdit.get('name')?.hasError(error.type) && formEdit.get('name')?.dirty"
+              >
+                {{ error.message }}
+              </ion-label>
+            </ng-container>
+          </ion-item-group>
+
+          <!-- Campo Apellido -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                label="Apellido"
+                labelPlacement="floating"
+                placeholder="perez"
+                formControlName="last_name"
+              ></ion-input>
+            </ion-item>
+            <ng-container *ngFor="let error of formErrors.apellido">
+              <ion-label
+                color="danger"
+                *ngIf="formEdit.get('last_name')?.hasError(error.type) && formEdit.get('last_name')?.dirty"
+              >
+                {{ error.message }}
+              </ion-label>
+            </ng-container>
+          </ion-item-group>
+
+          <!-- Campo Username -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                label="Username"
+                labelPlacement="floating"
+                placeholder="user00"
+                formControlName="username"
+              ></ion-input>
+            </ion-item>
+            <ng-container *ngFor="let error of formErrors.username">
+              <ion-label
+                color="danger"
+                *ngIf="formEdit.get('username')?.hasError(error.type) && formEdit.get('username')?.dirty"
+              >
+                {{ error.message }}
+              </ion-label>
+            </ng-container>
+          </ion-item-group>
+
+          <!-- Campo Contraseña -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                type="password"
+                label="Contraseña"
+                label-placement="floating"
+                formControlName="password"
+              ></ion-input>
+            </ion-item>
+            <ng-container *ngFor="let error of formErrors.password">
+              <ion-label
+                color="danger"
+                *ngIf="formEdit.get('password')?.hasError(error.type) && formEdit.get('password')?.dirty"
+              >
+                {{ error.message }}
+              </ion-label>
+            </ng-container>
+          </ion-item-group>
+
+          <!-- Campo Confirmar Contraseña -->
+          <ion-item-group class="ion-margin">
+            <ion-item>
+              <ion-input
+                type="password"
+                label="Confirmar contraseña"
+                label-placement="floating"
+                formControlName="confirmPassword"
+              ></ion-input>
+            </ion-item>
+            <ion-text
+              color="danger"
+              *ngIf="formEdit.hasError('passwordsDoNotMatch') && formEdit.dirty"
+            >
+              <span>Las contraseñas no coinciden</span>
+            </ion-text>
+          </ion-item-group>
+
+          <!-- Botón de registro -->
+          <ion-item-group class="ion-margin">
+            <ion-button expand="block" [disabled]="!formEdit.valid" type="submit">
+              Editar usuario
+            </ion-button>
+          </ion-item-group>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

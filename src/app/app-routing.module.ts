@@ -28,7 +28,12 @@ const routes: Routes = [
   {
     path: 'postmodal',
     loadChildren: () => import('./postmodal/postmodal.module').then( m => m.PostmodalPageModule)
+  },
+  {
+    path: 'edit-profile',
+    loadChildren: () => import('./edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
   }
+
 
 ];
 
