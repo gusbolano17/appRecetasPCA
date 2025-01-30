@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
@@ -8,6 +8,7 @@ export class PostService {
 
   urlServer = 'http://51.79.26.171';
   httpHeaders = { headers: new HttpHeaders({"Content-Type": "application/json"})};
+  postEmited : EventEmitter<any> = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
@@ -52,6 +53,7 @@ export class PostService {
       this.http.post(`${this.urlServer}/posts`, post_data, this.httpHeaders).subscribe(
         (data: any)=>{
           accept(data);
+          this.postEmited .emit(post_data);
         },
         (error) => {
           console.log(error, 'error');

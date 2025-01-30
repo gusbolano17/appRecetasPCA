@@ -5,6 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {PostService} from "../services/post.service";
 import {Storage} from "@ionic/storage-angular";
 import {ModalController} from "@ionic/angular";
+import {ToastService} from "../services/toast.service";
 defineCustomElements(window)
 
 @Component({
@@ -22,7 +23,8 @@ export class PostmodalPage {
     private fb: FormBuilder,
     private postService: PostService,
     private storage: Storage,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private toastService: ToastService,
   ) {
     this.addPostForm = this.fb.group({
       description: new FormControl('', Validators.required),
@@ -56,12 +58,24 @@ export class PostmodalPage {
       }
     }
 
-    this.postService.createPost(post_param).then(data => {
-      console.log('Post creado', data);
-      this.modalController.dismiss();
+    this.postService.createPost(post_param).then((data:any) => {
+      data.user = {
+        id: usuario.id,
+        name: usuario.name,
+        image: usuario.image,
+      }
+      this.postService.postEmited.emit(data);
+      this.addPostForm.reset();
+      this.post_image = null;
+      this.toastService.crearToast('top', data.msg, 'success');
+      this.cerrarModal();
     }).catch(error => {
       console.error('error', error)
     })
 
+  }
+
+  async cerrarModal() {
+    await this.modalController.dismiss();
   }
 }

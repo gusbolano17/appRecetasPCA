@@ -17,11 +17,15 @@ export class HomePage implements OnInit {
   page : number = 1;
   limit : number = 10;
   hasMore : boolean = true;
+  isLoading : boolean = false;
 
   constructor(private postS : PostService, private modalController : ModalController) { }
 
   async ngOnInit() {
     this.cargarPosts();
+    this.postS.postEmited.subscribe(post => {
+      this.posts.unshift(post);
+    })
   }
 
 
@@ -34,6 +38,9 @@ export class HomePage implements OnInit {
   }
 
   cargarPosts(event?:any){
+
+    this.isLoading = true;
+
     this.postS.listarPosts(this.page, this.limit).then(
       (data: any)=>{
         if (data.length > 0){
@@ -42,13 +49,14 @@ export class HomePage implements OnInit {
         }else{
           this.hasMore = false;
         }
-
+        this.isLoading = false;
         if (event){
           event.target.complete();
         }
       },
       (error)=>{
         console.log(error);
+        this.isLoading = false;
         if (event){
           event.target.complete();
         }

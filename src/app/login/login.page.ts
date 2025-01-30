@@ -3,6 +3,7 @@ import {Component} from "@angular/core";
 import {NavController} from "@ionic/angular";
 import {AuthService} from "../services/auth.service";
 import {Storage} from "@ionic/storage-angular";
+import {ToastService} from "../services/toast.service";
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginPage{
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private navCtrl: NavController,
-    private storage: Storage
+    private storage: Storage,
+    private toastService: ToastService,
   ) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl('', Validators.compose([
@@ -43,14 +45,16 @@ export class LoginPage{
   }
 
 
-  loginUser(credentials: any){
-    this.authService.login(credentials).then(res => {
+  async loginUser(credentials: any){
+    this.authService.login(credentials).then((res:any) => {
       this.errorMessage = '';
       this.storage.set('isUserLoggedIn', true);
       this.storage.set('userId', res)
       this.navCtrl.navigateForward('/menu/home');
+      this.toastService.crearToast('top', res.msg, res.status == 'OK' ? 'success' : 'danger');
     }).catch(err => {
       console.log(err);
+      this.toastService.crearToast('top', err, 'danger');
       this.errorMessage = err;
     });
   }

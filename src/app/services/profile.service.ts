@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
@@ -8,6 +8,7 @@ export class ProfileService {
 
   urlServer = 'http://51.79.26.171';
   httpHeaders = { headers: new HttpHeaders({"Content-Type": "application/json"})};
+  profileUpdated : EventEmitter<any> = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +43,7 @@ export class ProfileService {
       this.http.post(`${this.urlServer}/update/${user.id}`, user_params, this.httpHeaders).subscribe(
         (data: any)=>{
           accept(data);
+          this.profileUpdated.emit(data);
         },
         (error) => {
           console.log(error, 'error');
@@ -53,5 +55,45 @@ export class ProfileService {
         }
       )
     });
+  }
+
+  seguirUsuario(id: any, followee_id: any){
+    const follow_params = {
+      followee_id
+    }
+    return new Promise((accept, reject) => {
+      this.http.post(`${this.urlServer}/follow/${id}`, follow_params, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al seguir al usuario');
+          }
+        }
+      )
+    })
+  }
+
+  dejarSeguirUsuario(id: any, followee_id: any){
+    const unfollow_params = {
+      followee_id
+    }
+    return new Promise((accept, reject) => {
+      this.http.post(`${this.urlServer}/unfollow/${id}`, unfollow_params, this.httpHeaders).subscribe(
+        (data: any)=>{
+          accept(data);
+        },
+        (error) => {
+          if (error.status == 500){
+            reject('Error Porfavor intenta mas tarde');
+          }else{
+            reject('Error al dejar de seguir al usuario');
+          }
+        }
+      )
+    })
   }
 }

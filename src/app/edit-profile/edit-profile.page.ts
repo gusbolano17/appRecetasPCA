@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {validadorCoincidenciaPass} from "../utils/validadores";
 import {ProfileService} from "../services/profile.service";
-import {Camera, CameraResultType} from "@capacitor/camera";
-import {ModalController, NavParams} from "@ionic/angular";
+import {Camera, CameraResultType, CameraSource} from "@capacitor/camera";
+import {AlertController, ModalController, NavParams} from "@ionic/angular";
+import {ToastService} from "../services/toast.service";
 
 @Component({
   selector: 'app-edit-profile',
@@ -43,7 +44,14 @@ export class EditProfilePage implements OnInit {
     ]
   }
 
-  constructor(private fb : FormBuilder, private profileService: ProfileService, private modalCtrl : ModalController, private navParam: NavParams) {
+  constructor(
+    private fb : FormBuilder,
+    private profileService: ProfileService,
+    private modalCtrl : ModalController,
+    private navParam: NavParams,
+    private alertCtrl: AlertController,
+    private toastService: ToastService,
+  ) {
     this.formEdit = this.fb.group({
       name: new FormControl('', Validators.compose([Validators.required])),
       last_name: new FormControl('', Validators.compose([Validators.required])),
@@ -71,11 +79,12 @@ export class EditProfilePage implements OnInit {
     this.usuarioE.id = usuario.id;
   }
 
-  async tomarFoto(){
+  async tomarFoto(source : CameraSource){
     const imagen = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
-      resultType: CameraResultType.DataUrl
+      resultType: CameraResultType.DataUrl,
+      source
     })
 
     this.usuarioE.image = imagen?.dataUrl;
@@ -87,13 +96,45 @@ export class EditProfilePage implements OnInit {
     this.usuarioE.username = formData.username;
     this.usuarioE.password = formData.password;
 
-    this.profileService.updateUser(this.usuarioE).then(data => {
+    this.profileService.updateUser(this.usuarioE).then((data:any) => {
       console.log(data);
-      this.modalCtrl.dismiss();
+      this.toastService.crearToast('top', data.msg, 'success');
+      this.profileService.profileUpdated.emit(data);
+      this.cerrarModal();
     }).catch(error => {
       console.error(error);
     })
   }
 
+  async tomarFotoOpciones(){
+    const alert = await this.alertCtrl.create({
+      header: 'Seleccione una opcion',
+      message: 'De donde quieres obtener la imagen?',
+      buttons: [
+        {
+          text: 'Camara',
+          handler : () => {
+            this.tomarFoto(CameraSource.Camera)
+          }
+        },
+        {
+          text: 'Galeria',
+          handler : () => {
+            this.tomarFoto(CameraSource.Photos)
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        }
+      ]
+    })
 
+    return alert.present();
+  }
+
+
+  async cerrarModal() {
+    await this.modalCtrl.dismiss();
+  }
 }

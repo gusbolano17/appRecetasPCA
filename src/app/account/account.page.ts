@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ProfileService} from "../services/profile.service";
 import {Storage} from "@ionic/storage-angular";
-import {MenuController, ModalController, NavController} from "@ionic/angular";
-import { Camera, CameraResultType } from '@capacitor/camera';
+import {AlertController, MenuController, ModalController, NavController} from "@ionic/angular";
+import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import {PostService} from "../services/post.service";
 import {EditProfilePage} from "../edit-profile/edit-profile.page";
@@ -16,15 +16,13 @@ defineCustomElements(window)
 })
 export class AccountPage implements OnInit {
 
-  editing : boolean = false;
-
   public usuario : any = {
     name: '',
     last_name:'',
     email: '',
     image: '',
-    followed_users: [],
-    following_users: []
+    followers: [],
+    followees: []
   };
   posts: any[] = [];
 
@@ -33,14 +31,18 @@ export class AccountPage implements OnInit {
               private storage : Storage,
               private navCtrl : NavController,
               private postService: PostService,
-              private modalController : ModalController
+              private modalController : ModalController,
+              private alertCtrl : AlertController,
   ) {
   }
 
   async ngOnInit() {
     await this.menuCtrl.close();
     await this.obtenerUsuario();
-    this.listarPostsUsuario();
+    await this.listarPostsUsuario();
+    this.profileService.profileUpdated.subscribe((us) => {
+      this.usuario = us;
+    })
   }
 
   regresar(){
@@ -68,9 +70,58 @@ export class AccountPage implements OnInit {
     let usuario = await this.storage.get('userId');
     const modal = await this.modalController.create({
       component: EditProfilePage,
-      componentProps: {usuario}
+      componentProps: {usuario},
+      canDismiss: true
     })
     return modal.present();
+  }
+
+
+  async tomarFoto(source : CameraSource){
+    const imagen = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.DataUrl,
+      source: source
+    })
+
+    this.usuario.image = imagen?.dataUrl;
+    await this.editarUsuario();
+  }
+
+  async editarUsuario() {
+    this.profileService.updateUser(this.usuario).then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.error(error);
+    })
+  }
+
+  async tomarFotoOpciones(){
+    const alert = await this.alertCtrl.create({
+      header: 'Seleccione una opcion',
+      message: 'De donde quieres obtener la imagen?',
+      buttons: [
+        {
+          text: 'Camara',
+          handler : () => {
+            this.tomarFoto(CameraSource.Camera)
+          }
+        },
+        {
+          text: 'Galeria',
+          handler : () => {
+            this.tomarFoto(CameraSource.Photos)
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        }
+      ]
+    })
+
+    return alert.present();
   }
 
 }

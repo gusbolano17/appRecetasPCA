@@ -16,7 +16,7 @@
   <ion-grid>
     <ion-row class="ion-padding ion-align-items-center">
       <ion-col size="4" class="ion-align-items-center ion-justify-content-center">
-        <ion-avatar class="profile-avatar">
+        <ion-avatar class="profile-avatar" (click)="tomarFotoOpciones()">
           <ion-img [src]="usuario.image" alt="Profile Image" ></ion-img>
         </ion-avatar>
       </ion-col>
@@ -24,10 +24,10 @@
         <ion-text>{{usuario.name}} {{usuario.last_name}}</ion-text>
         <ion-row class="ion-text-center ion-margin">
           <ion-col size="4">
-            <ion-text>Followers: {{usuario.followed_users.length}}</ion-text>
+            <ion-text>Followers {{usuario.followers.length}}</ion-text>
           </ion-col>
           <ion-col size="4">
-            <ion-text>Following: {{usuario.following_users.length}}</ion-text>
+            <ion-text>Following {{usuario.followees.length}}</ion-text>
           </ion-col>
         </ion-row>
       </ion-col>

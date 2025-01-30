@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Editar perfil de usuario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="medium" (click)="cerrarModal()">Cancelar</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -11,7 +14,7 @@
       <ion-col size="12" size-md="8" size-lg="6">
         <form [formGroup]="formEdit" (ngSubmit)="editarUsuario(formEdit.value)">
           <!--Campo imagen-->
-          <ion-item-group class="ion-margin" (click)="tomarFoto()">
+          <ion-item-group class="ion-margin" (click)="tomarFotoOpciones()">
             <figure>
               <ion-img [src]="usuarioE.image" alt="Profile Image" ></ion-img>
             </figure>

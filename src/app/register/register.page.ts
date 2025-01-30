@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../services/auth.service";
 import {NavController} from "@ionic/angular";
 import {validadorCoincidenciaPass} from "../utils/validadores";
+import {ToastService} from "../services/toast.service";
 
 @Component({
   selector: 'app-register',
@@ -37,7 +38,7 @@ export class RegisterPage{
     ]
   }
 
-  constructor(private fb : FormBuilder, private authService : AuthService, private navCtrl: NavController) {
+  constructor(private fb : FormBuilder, private authService : AuthService, private navCtrl: NavController, private toastService : ToastService) {
     this.formRegister = this.fb.group({
       name: new FormControl('', Validators.compose([Validators.required])),
       last_name: new FormControl('', Validators.compose([Validators.required])),
@@ -59,8 +60,9 @@ export class RegisterPage{
   }
 
   register(formValue: any) {
-    this.authService.register(formValue).then(res => {
+    this.authService.register(formValue).then((res:any) => {
       this.navCtrl.navigateForward('/login');
+      this.toastService.crearToast('top', res, 'success');
     }).catch(err => {
       console.log(err);
     });
