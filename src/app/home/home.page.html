@@ -34,7 +34,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-img [src]="post.image" alt="imagen post" class="image-post" />
+              <ion-img [src]="!post.image ? 'assets/images/template_img.jpg' : post.image" alt="imagen post" class="image-post" />
             </ion-item>
 
             <ion-card-content>

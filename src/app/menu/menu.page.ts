@@ -18,7 +18,9 @@ export class MenuPage{
   }
 
   logOut(){
-    this.storage.clear()
+    this.storage.remove("user");
+    this.storage.remove("userId");
+    this.storage.set("isUserLoggedIn", false);
     this.navCtrl.navigateForward('/login');
     this.closeMenu();
   }
