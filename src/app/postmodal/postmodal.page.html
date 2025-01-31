@@ -15,7 +15,7 @@
         <ion-col size="12" class="ion-text-center">
           <ion-item button (click)="subirFoto()">
             <ion-img
-              [src]="!post_image ? 'assets/images/template_img.jpg' : post_image"
+              [src]="post_image || 'assets/images/template_img.jpg'"
               class="post-image">
             </ion-img>
           </ion-item>
