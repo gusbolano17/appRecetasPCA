@@ -22,13 +22,15 @@
     <ion-grid>
       <ion-row>
         <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
-        <ion-col *ngFor="let post of posts" size="12" size-md="6" size-lg="4">
+        <ion-col *ngFor="let post of posts" size="12" size-md="6" size-lg="4" class="ion-margin-vertical-3">
           <ion-card class="ion-padding">
-            <ion-item lines="none">
+            <ion-item lines="none" class="ion-align-items-center">
               <ion-avatar>
                 <ion-img alt="Avatar de usuario" [src]="!post.user?.image ? 'assets/images/template_img.jpg' : post.user?.image"/>
               </ion-avatar>
-              <ion-label class="user-label">{{ !post.user.name ? 'Usuario' : post.user.name}} {{ post.user.last_name ? 'Indefinido' : post.user.last_name}}</ion-label>
+              <ion-text>
+                <h2 class="user-name">{{ !post.user.name || false ? 'Usuario indefinido' : post.user.name}}</h2>
+              </ion-text>
             </ion-item>
 
             <ion-item>

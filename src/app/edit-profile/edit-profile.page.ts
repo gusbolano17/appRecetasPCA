@@ -5,6 +5,7 @@ import {ProfileService} from "../services/profile.service";
 import {Camera, CameraResultType, CameraSource} from "@capacitor/camera";
 import {AlertController, ModalController, NavParams} from "@ionic/angular";
 import {ToastService} from "../services/toast.service";
+import {Storage} from "@ionic/storage-angular";
 
 @Component({
   selector: 'app-edit-profile',
@@ -51,6 +52,7 @@ export class EditProfilePage implements OnInit {
     private navParam: NavParams,
     private alertCtrl: AlertController,
     private toastService: ToastService,
+    private storage: Storage
   ) {
     this.formEdit = this.fb.group({
       name: new FormControl('', Validators.compose([Validators.required])),
@@ -69,7 +71,7 @@ export class EditProfilePage implements OnInit {
   }
 
   ngOnInit(): void {
-    const usuario = this.navParam.data["usuario"].user
+    const usuario = this.navParam.data["usuario"]
     this.formEdit.patchValue({
       name: usuario.name,
       last_name: usuario.last_name,
@@ -99,7 +101,8 @@ export class EditProfilePage implements OnInit {
     this.profileService.updateUser(this.usuarioE).then((data:any) => {
       console.log(data);
       this.toastService.crearToast('top', data.msg, 'success');
-      this.profileService.profileUpdated.emit(data);
+      this.profileService.profileUpdated.emit(data.user);
+      this.storage.set('user', data.user);
       this.cerrarModal();
     }).catch(error => {
       console.error(error);

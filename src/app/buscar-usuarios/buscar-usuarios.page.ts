@@ -27,9 +27,9 @@ export class BuscarUsuariosPage implements OnInit {
     private toastService: ToastService,
   ) { }
 
-  ngOnInit() {
-    this.menuCtrl.close();
-    this.cargarUsuarios();
+  async ngOnInit() {
+    await this.menuCtrl.close();
+    await this.cargarUsuarios();
   }
 
   async cargarUsuarios(event?: any) {
@@ -38,7 +38,7 @@ export class BuscarUsuariosPage implements OnInit {
       this.usuarioActual = await this.storage.get('userId').then((p) => p.user);
     }
 
-    const followingUsers = this.usuarioActual.following_users || [];
+    const followingUsers = this.usuarioActual.followees || [];
     this.profileService.listarUsuarios(this.pagina,this.limite, this.query).then(
       (data : any) => {
         if(data.users.length > 0){
@@ -79,7 +79,7 @@ export class BuscarUsuariosPage implements OnInit {
     const user_id = this.usuarioActual.id;
     this.profileService.seguirUsuario(user_id, followee_id).then(
       (data : any) => {
-        this.toastService.crearToast('top', data, 'success');
+        this.toastService.crearToast('top', data.msg, 'success');
         this.usuarios = this.usuarios.map((usuario: any) => {
           if(usuario.id == followee_id){
             return{
@@ -99,7 +99,8 @@ export class BuscarUsuariosPage implements OnInit {
     const user_id = this.usuarioActual.id;
     this.profileService.dejarSeguirUsuario(user_id, followee_id).then(
       (data : any) => {
-        this.toastService.crearToast('top', data, 'success');
+        console.log(data)
+        this.toastService.crearToast('top', data.msg, 'success');
         this.usuarios = this.usuarios.map((usuario: any) => {
           if(usuario.id == followee_id){
             return{

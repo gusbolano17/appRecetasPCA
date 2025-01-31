@@ -14,37 +14,29 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row class="ion-padding ion-align-items-center">
-      <ion-col size="4" class="ion-align-items-center ion-justify-content-center">
+    <ion-row class="profile-container ion-align-items-center">
+      <ion-col size="3" class="ion-text-center">
         <ion-avatar class="profile-avatar" (click)="tomarFotoOpciones()">
-          <ion-img [src]="usuario.image" alt="Profile Image" ></ion-img>
+          <ion-img [src]="usuario.image" alt="Profile Image"></ion-img>
         </ion-avatar>
       </ion-col>
-      <ion-col size="8">
-        <ion-text>{{usuario.name}} {{usuario.last_name}}</ion-text>
-        <ion-row class="ion-text-center ion-margin">
-          <ion-col size="4">
-            <ion-text>Followers {{usuario.followers.length}}</ion-text>
-          </ion-col>
-          <ion-col size="4">
-            <ion-text>Following {{usuario.followees.length}}</ion-text>
-          </ion-col>
-        </ion-row>
+      <ion-col size="9" class="user-details">
+        <ion-text class="user-name">{{usuario.name}} {{usuario.last_name}}</ion-text>
+        <div class="follow-info">
+          <span>Followers {{usuario.followers.length}}</span>
+          <span>Following {{usuario.followees.length}}</span>
+        </div>
       </ion-col>
     </ion-row>
+
     <ion-row>
       <ion-col size="12">
-        <ion-button expand="block" (click)="editarUsuarioModal()">Editar perfil</ion-button>
+        <ion-button expand="block" class="edit-profile-btn" (click)="editarUsuarioModal()">
+          Editar perfil
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="4" *ngFor="let p of posts">
-        <ion-card class="post-card">
-          <ion-img [src]="p.image" alt="Post Image" />
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+
+
 </ion-content>

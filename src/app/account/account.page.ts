@@ -4,8 +4,8 @@ import {Storage} from "@ionic/storage-angular";
 import {AlertController, MenuController, ModalController, NavController} from "@ionic/angular";
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
-import {PostService} from "../services/post.service";
 import {EditProfilePage} from "../edit-profile/edit-profile.page";
+import {ToastService} from "../services/toast.service";
 defineCustomElements(window)
 
 @Component({
@@ -30,16 +30,15 @@ export class AccountPage implements OnInit {
               private menuCtrl: MenuController,
               private storage : Storage,
               private navCtrl : NavController,
-              private postService: PostService,
               private modalController : ModalController,
               private alertCtrl : AlertController,
+              private toastService: ToastService,
   ) {
   }
 
   async ngOnInit() {
     await this.menuCtrl.close();
     await this.obtenerUsuario();
-    await this.listarPostsUsuario();
     this.profileService.profileUpdated.subscribe((us) => {
       this.usuario = us;
     })
@@ -47,13 +46,6 @@ export class AccountPage implements OnInit {
 
   regresar(){
     this.navCtrl.navigateBack('menu/home');
-  }
-
-  async listarPostsUsuario(){
-    let usuario = await this.storage.get('userId');
-    this.postService.listarTodosPosts().then((resp:any) => {
-      this.posts = resp.filter((p:any) => p.user_id == usuario.user.id);
-    })
   }
 
   async obtenerUsuario(){
@@ -67,7 +59,7 @@ export class AccountPage implements OnInit {
   }
 
   async editarUsuarioModal(){
-    let usuario = await this.storage.get('userId');
+    let usuario = await this.storage.get('user');
     const modal = await this.modalController.create({
       component: EditProfilePage,
       componentProps: {usuario},
@@ -83,6 +75,8 @@ export class AccountPage implements OnInit {
       allowEditing: true,
       resultType: CameraResultType.DataUrl,
       source: source
+    }).catch(error => {
+      this.toastService.crearToast('top', "Has cancelado la operacion", 'danger');
     })
 
     this.usuario.image = imagen?.dataUrl;
