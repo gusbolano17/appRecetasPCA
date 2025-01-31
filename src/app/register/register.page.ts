@@ -62,9 +62,10 @@ export class RegisterPage{
   register(formValue: any) {
     this.authService.register(formValue).then((res:any) => {
       this.navCtrl.navigateForward('/login');
-      this.toastService.crearToast('top', res, 'success');
+      this.toastService.crearToast('top', res.msg, 'success');
     }).catch(err => {
       console.log(err);
+      this.toastService.crearToast('top', err, 'danger');
     });
   }
 

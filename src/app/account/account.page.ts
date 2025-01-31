@@ -84,8 +84,10 @@ export class AccountPage implements OnInit {
   }
 
   async editarUsuario() {
-    this.profileService.updateUser(this.usuario).then(data => {
-      console.log(data);
+    this.profileService.updateUser(this.usuario).then((data:any) => {
+      this.toastService.crearToast('top', data.msg, 'success');
+      this.profileService.profileUpdated.emit(data.user);
+      this.storage.set('user', data.user);
     }).catch(error => {
       console.error(error);
     })
